@@ -1,31 +1,43 @@
 # 🚍 Short Bus Raid Manager
 
-A Discord bot for organizing SWTOR Operations.
+A Discord bot for organizing **Star Wars: The Old Republic** Operations and raid signups.
 
-## Features
+## ✨ Features
 
 - 🎲 Random Operation Wheel
-- 🛡 Tank signup
+- 🛡️ Tank signup
 - 💚 Healer signup
-- ⚔ DPS signup
+- ⚔️ DPS signup
 - 🪑 Bench system
 - ❌ Leave raid
-- Automatic role limits
+- 🔄 Automatic role limits
 
-## Built With
+## 🛠️ Built With
 
-- Python
+- Python 3.14
 - discord.py
 - Git
 - GitHub
 
-## Planned Features
+## 🚀 Planned Features
 
-- Player Profiles
-- SQLite Database
-- Raid Scheduling
-- Attendance Tracking
-- Gear Profiles
-- Raid Statistics
+- 👤 Player Profiles
+- 💾 SQLite Database
+- 📅 Raid Scheduling
+- 📊 Attendance Tracking
+- ⚙️ Gear Profiles
+- 📈 Raid Statistics
+- 👑 Raid Leader Controls
+- 🔔 Raid Reminders
 
-Made by TheRealDaakal
+## 📷 Preview
+
+*(Add a screenshot of the bot here later.)*
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+Made with ❤️ by **TheRealDaakal**
