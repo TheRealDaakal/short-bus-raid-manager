@@ -12,3 +12,5 @@ venv/
 
 # VS Code
 .vscode/
+# SQLite
+database/*.db
