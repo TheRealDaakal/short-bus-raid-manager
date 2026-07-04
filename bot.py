@@ -37,6 +37,10 @@ class RaidBot(commands.Bot):
         await self.load_extension("cogs.members")
         print("✅ Members Cog Loaded")
 
+        print("Loading Profile Cog...")
+        await self.load_extension("cogs.profile")
+        print("✅ Profile Cog Loaded")
+
         self.tree.copy_global_to(guild=guild)
 
         synced = await self.tree.sync(guild=guild)
@@ -54,6 +58,5 @@ async def on_ready():
     initialize_database()
 
     print(f"Logged in as {bot.user}")
-
 
 bot.run(TOKEN)

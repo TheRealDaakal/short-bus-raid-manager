@@ -27,6 +27,21 @@ def initialize_database():
         CREATE TABLE IF NOT EXISTS players (
             discord_id INTEGER PRIMARY KEY,
             discord_name TEXT NOT NULL,
+
+            character_name TEXT,
+            legacy_name TEXT,
+
+            player_class TEXT,
+            discipline TEXT,
+
+            can_tank INTEGER DEFAULT 0,
+            can_heal INTEGER DEFAULT 0,
+            can_dps INTEGER DEFAULT 1,
+
+            is_main INTEGER DEFAULT 1,
+
+            attendance REAL DEFAULT 0,
+
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     """)
