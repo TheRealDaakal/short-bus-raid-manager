@@ -23,6 +23,7 @@ def initialize_database():
     conn = get_connection()
     cursor = conn.cursor()
 
+    # Players table
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS players (
             discord_id INTEGER PRIMARY KEY,
@@ -41,6 +42,27 @@ def initialize_database():
             is_main INTEGER DEFAULT 1,
 
             attendance REAL DEFAULT 0,
+
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+    """)
+
+    # Raids table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS raids (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+            operation TEXT NOT NULL,
+            difficulty TEXT NOT NULL,
+
+            raid_date TEXT NOT NULL,
+            raid_time TEXT NOT NULL,
+
+            created_by INTEGER NOT NULL,
+
+            tanks_needed INTEGER DEFAULT 2,
+            healers_needed INTEGER DEFAULT 2,
+            dps_needed INTEGER DEFAULT 4,
 
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
