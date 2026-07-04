@@ -23,6 +23,7 @@ def add_player(member):
 
 def save_player_profile(
     discord_id: int,
+    discord_name: str,
     character_name: str,
     legacy_name: str,
     player_class: str,
@@ -32,6 +33,15 @@ def save_player_profile(
 
     conn = get_connection()
     cursor = conn.cursor()
+
+    cursor.execute("""
+        INSERT OR IGNORE INTO players
+        (discord_id, discord_name)
+        VALUES (?, ?)
+    """, (
+        discord_id,
+        discord_name,
+    ))
 
     cursor.execute("""
         UPDATE players

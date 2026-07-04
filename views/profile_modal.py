@@ -37,39 +37,40 @@ class ProfileModal(discord.ui.Modal, title="Create Your SWTOR Profile"):
 
         save_player_profile(
             discord_id=interaction.user.id,
-            character_name=str(self.character),
-            legacy_name=str(self.legacy),
-            player_class=str(self.player_class),
-            discipline=str(self.discipline),
+            discord_name=str(interaction.user),
+            character_name=self.character.value,
+            legacy_name=self.legacy.value,
+            player_class=self.player_class.value,
+            discipline=self.discipline.value,
         )
 
         embed = discord.Embed(
-            title="✅ Profile Saved",
-            description="Your SWTOR profile has been updated.",
+            title="✅ Profile Saved!",
+            description="Your SWTOR profile has been saved successfully.",
             color=discord.Color.green(),
         )
 
         embed.add_field(
             name="Character",
-            value=str(self.character),
+            value=self.character.value,
             inline=True,
         )
 
         embed.add_field(
             name="Legacy",
-            value=str(self.legacy) or "None",
+            value=self.legacy.value or "Not Set",
             inline=True,
         )
 
         embed.add_field(
             name="Class",
-            value=str(self.player_class),
+            value=self.player_class.value,
             inline=True,
         )
 
         embed.add_field(
             name="Discipline",
-            value=str(self.discipline),
+            value=self.discipline.value,
             inline=True,
         )
 
