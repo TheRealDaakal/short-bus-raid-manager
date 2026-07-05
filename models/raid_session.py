@@ -1,3 +1,6 @@
+from models.raid_member import RaidMember
+
+
 class RaidSession:
     def __init__(
         self,
@@ -6,6 +9,7 @@ class RaidSession:
         raid_date="",
         raid_time="",
         raid_leader="",
+        raid_leader_id=None,
         raid_id=None,
     ):
         self.raid_id = raid_id
@@ -14,23 +18,42 @@ class RaidSession:
         self.difficulty = difficulty
         self.raid_date = raid_date
         self.raid_time = raid_time
+
         self.raid_leader = raid_leader
+        self.raid_leader_id = raid_leader_id
 
         # Raid Status
         self.locked = False
         self.completed = False
 
-        # Discord message ID (used later for live updates)
+        # Discord Message Tracking
         self.message_id = None
+        self.channel_id = None
 
-        # Signup Lists
-        self.tanks = []
-        self.healers = []
-        self.dps = []
-        self.bench = []
+        # Raid Members
+        self.tanks: list[RaidMember] = []
+        self.healers: list[RaidMember] = []
+        self.dps: list[RaidMember] = []
+        self.bench: list[RaidMember] = []
 
-    def remove_player(self, user_id):
-        self.tanks = [p for p in self.tanks if p.id != user_id]
-        self.healers = [p for p in self.healers if p.id != user_id]
-        self.dps = [p for p in self.dps if p.id != user_id]
-        self.bench = [p for p in self.bench if p.id != user_id]
+    def remove_player(self, user_id: int):
+
+        self.tanks = [
+            player for player in self.tanks
+            if player.id != user_id
+        ]
+
+        self.healers = [
+            player for player in self.healers
+            if player.id != user_id
+        ]
+
+        self.dps = [
+            player for player in self.dps
+            if player.id != user_id
+        ]
+
+        self.bench = [
+            player for player in self.bench
+            if player.id != user_id
+        ]

@@ -1,4 +1,16 @@
+# ============================================
+# SWTOR DATA
+# Short Bus Jawa v1.0
+# ============================================
+
+# ---------------------------------
+# Operations & Lair Bosses
+# ---------------------------------
+
 OPERATIONS = {
+
+    # Operations
+
     "ev": "Eternity Vault",
     "eternity vault": "Eternity Vault",
 
@@ -31,28 +43,184 @@ OPERATIONS = {
 
     "dxun": "The Nature of Progress",
     "nature of progress": "The Nature of Progress",
+    "the nature of progress": "The Nature of Progress",
 
     "r4": "R-4 Anomaly",
     "r-4": "R-4 Anomaly",
     "r-4 anomaly": "R-4 Anomaly",
+
+    # ---------------------------------
+    # Lair Bosses
+    # ---------------------------------
+
+    "xeno": "Xenoanalyst II",
+    "xenoanalyst": "Xenoanalyst II",
+    "xenoanalyst ii": "Xenoanalyst II",
+
+    "eyeless": "The Eyeless",
+    "the eyeless": "The Eyeless",
+
+    "gf": "Golden Fury",
+    "golden fury": "Golden Fury",
+
+    "cm": "Colossal Monolith",
+    "colossal monolith": "Colossal Monolith",
+
+    "hq": "Geonosian Hive Queen",
+    "hive queen": "Geonosian Hive Queen",
+    "geonosian hive queen": "Geonosian Hive Queen",
+
+    "xr53": "Propagator Core XR-53",
+    "propagator": "Propagator Core XR-53",
+    "propagator core": "Propagator Core XR-53",
+
+    "rr": "Relentless Replication",
+    "relentless replication": "Relentless Replication",
 }
 
+# ---------------------------------
+# Difficulties
+# ---------------------------------
+
 DIFFICULTIES = {
-    "sm": "Story Mode (SM)",
-    "story": "Story Mode (SM)",
-    "story mode": "Story Mode (SM)",
 
-    "vm": "Veteran Mode (VM)",
-    "hm": "Veteran Mode (VM)",
-    "hard": "Veteran Mode (VM)",
-    "hard mode": "Veteran Mode (VM)",
-    "veteran": "Veteran Mode (VM)",
+    # Story
 
-    "mm": "Master Mode (MM)",
-    "master": "Master Mode (MM)",
-    "master mode": "Master Mode (MM)",
+    "sm": "Story (SM)",
+    "story": "Story (SM)",
+    "story mode": "Story (SM)",
 
-    "nim": "Nightmare Mode (NiM)",
-    "nightmare": "Nightmare Mode (NiM)",
-    "nightmare mode": "Nightmare Mode (NiM)",
+    # Veteran / Hard Mode
+
+    "vet": "Veteran (HM)",
+    "veteran": "Veteran (HM)",
+    "vm": "Veteran (HM)",
+    "hm": "Veteran (HM)",
+    "hard": "Veteran (HM)",
+    "hard mode": "Veteran (HM)",
+
+    # Nightmare / Master Mode
+
+    "nim": "Nightmare (NiM)",
+    "nightmare": "Nightmare (NiM)",
+    "nightmare mode": "Nightmare (NiM)",
+
+    "mm": "Nightmare (NiM)",
+    "master": "Nightmare (NiM)",
+    "master mode": "Nightmare (NiM)",
+}
+
+# ---------------------------------
+# Combat Styles
+# ---------------------------------
+
+COMBAT_STYLES = {
+
+    "Tank": {
+
+        "Juggernaut": ["Immortal"],
+        "Guardian": ["Defense"],
+        "Powertech": ["Shield Tech"],
+        "Vanguard": ["Shield Specialist"],
+        "Shadow": ["Kinetic Combat"],
+
+    },
+
+    "Healer": {
+
+        "Mercenary": ["Bodyguard"],
+        "Commando": ["Combat Medic"],
+        "Sorcerer": ["Corruption"],
+        "Sage": ["Seer"],
+        "Operative": ["Medicine"],
+        "Scoundrel": ["Sawbones"],
+
+    },
+
+    "DPS": {
+
+        "Juggernaut": [
+            "Vengeance",
+            "Rage",
+        ],
+
+        "Guardian": [
+            "Vigilance",
+            "Focus",
+        ],
+
+        "Powertech": [
+            "Advanced Prototype",
+            "Pyrotech",
+        ],
+
+        "Vanguard": [
+            "Tactics",
+            "Plasmatech",
+        ],
+
+        "Shadow": [
+            "Infiltration",
+            "Serenity",
+        ],
+
+        "Assassin": [
+            "Deception",
+            "Hatred",
+        ],
+
+        "Mercenary": [
+            "Arsenal",
+            "Innovative Ordnance",
+        ],
+
+        "Commando": [
+            "Gunnery",
+            "Assault Specialist",
+        ],
+
+        "Sorcerer": [
+            "Lightning",
+            "Madness",
+        ],
+
+        "Sage": [
+            "Telekinetics",
+            "Balance",
+        ],
+
+        "Operative": [
+            "Concealment",
+            "Lethality",
+        ],
+
+        "Scoundrel": [
+            "Scrapper",
+            "Ruffian",
+        ],
+
+        "Sniper": [
+            "Marksmanship",
+            "Engineering",
+            "Virulence",
+        ],
+
+        "Gunslinger": [
+            "Sharpshooter",
+            "Saboteur",
+            "Dirty Fighting",
+        ],
+
+        "Marauder": [
+            "Annihilation",
+            "Carnage",
+            "Fury",
+        ],
+
+        "Sentinel": [
+            "Watchman",
+            "Combat",
+            "Concentration",
+        ],
+    },
 }

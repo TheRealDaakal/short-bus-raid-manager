@@ -1,7 +1,10 @@
 from models.raid_session import RaidSession
+from models.raid_member import RaidMember
 
 
 class RaidManager:
+
+    bot = None
 
     active_raids: dict[int, RaidSession] = {}
 
@@ -18,6 +21,7 @@ class RaidManager:
         raid_date: str = "",
         raid_time: str = "",
         raid_leader: str = "",
+        raid_leader_id: int | None = None,
     ):
 
         session = RaidSession(
@@ -26,6 +30,7 @@ class RaidManager:
             raid_date=raid_date,
             raid_time=raid_time,
             raid_leader=raid_leader,
+            raid_leader_id=raid_leader_id,
             raid_id=raid_id,
         )
 
@@ -35,12 +40,10 @@ class RaidManager:
 
     @classmethod
     def get_session(cls, raid_id):
-
         return cls.active_raids.get(raid_id)
 
     @classmethod
     def remove_session(cls, raid_id):
-
         cls.active_raids.pop(raid_id, None)
 
     # -------------------------
@@ -48,43 +51,108 @@ class RaidManager:
     # -------------------------
 
     @classmethod
-    def join_tank(cls, session, user):
+    def join_tank(
+        cls,
+        session,
+        user,
+        combat_style="",
+        discipline="",
+    ):
+
+        if session.locked:
+            return False
 
         session.remove_player(user.id)
 
         if len(session.tanks) >= 2:
             return False
 
-        session.tanks.append(user)
+        session.tanks.append(
+            RaidMember(
+                member=user,
+                combat_style=combat_style,
+                discipline=discipline,
+            )
+        )
+
         return True
 
     @classmethod
-    def join_healer(cls, session, user):
+    def join_healer(
+        cls,
+        session,
+        user,
+        combat_style="",
+        discipline="",
+    ):
+
+        if session.locked:
+            return False
 
         session.remove_player(user.id)
 
         if len(session.healers) >= 2:
             return False
 
-        session.healers.append(user)
+        session.healers.append(
+            RaidMember(
+                member=user,
+                combat_style=combat_style,
+                discipline=discipline,
+            )
+        )
+
         return True
 
     @classmethod
-    def join_dps(cls, session, user):
+    def join_dps(
+        cls,
+        session,
+        user,
+        combat_style="",
+        discipline="",
+    ):
+
+        if session.locked:
+            return False
 
         session.remove_player(user.id)
 
         if len(session.dps) >= 4:
             return False
 
-        session.dps.append(user)
+        session.dps.append(
+            RaidMember(
+                member=user,
+                combat_style=combat_style,
+                discipline=discipline,
+            )
+        )
+
         return True
 
     @classmethod
-    def join_bench(cls, session, user):
+    def join_bench(
+        cls,
+        session,
+        user,
+        combat_style="",
+        discipline="",
+    ):
+
+        if session.locked:
+            return False
 
         session.remove_player(user.id)
-        session.bench.append(user)
+
+        session.bench.append(
+            RaidMember(
+                member=user,
+                combat_style=combat_style,
+                discipline=discipline,
+            )
+        )
+
         return True
 
     @classmethod
@@ -93,7 +161,7 @@ class RaidManager:
         session.remove_player(user.id)
 
     # -------------------------
-    # Officer Tools (Coming Soon)
+    # Officer Tools
     # -------------------------
 
     @classmethod
@@ -109,4 +177,7 @@ class RaidManager:
     @classmethod
     def finish_raid(cls, raid_id):
 
-        cls.remove_session(raid_id)
+        session = cls.get_session(raid_id)
+
+        if session:
+            session.completed = True
