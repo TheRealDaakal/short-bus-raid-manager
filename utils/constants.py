@@ -8,8 +8,15 @@ OPERATIONS = [
     "Dread Palace",
     "Temple of Sacrifice",
     "Gods From the Machine",
-    "Dxun",
+    "Dxun (The Nature of Progress)",
     "R-4 Anomaly",
+]
+
+DIFFICULTIES = [
+    "Story Mode (SM)",
+    "Veteran Mode (VM)",
+    "Master Mode (MM)",
+    "Nightmare Mode (NiM)",
 ]
 
 ROLE_LIMITS = {
@@ -20,7 +27,7 @@ ROLE_LIMITS = {
 
 EMOJIS = {
     "tank": "🛡",
-    "healer": "💚",
+    "healer": "⚕️",
     "dps": "⚔",
     "bench": "🪑",
 }

@@ -1,6 +1,9 @@
 import discord
 
 from services.raid_storage import create_raid
+from services.raid_manager import RaidManager
+from views.raid_view import RaidView
+from utils.embed_builder import build_raid_embed
 
 
 class RaidScheduleModal(discord.ui.Modal, title="Schedule a SWTOR Raid"):
@@ -14,7 +17,7 @@ class RaidScheduleModal(discord.ui.Modal, title="Schedule a SWTOR Raid"):
 
     difficulty = discord.ui.TextInput(
         label="Difficulty",
-        placeholder="Master Mode",
+        placeholder="Nightmare Mode (NiM)",
         required=True,
         max_length=50,
     )
@@ -35,6 +38,7 @@ class RaidScheduleModal(discord.ui.Modal, title="Schedule a SWTOR Raid"):
 
     async def on_submit(self, interaction: discord.Interaction):
 
+        # Save the raid to the database
         raid_id = create_raid(
             operation=self.operation.value,
             difficulty=self.difficulty.value,
@@ -43,38 +47,28 @@ class RaidScheduleModal(discord.ui.Modal, title="Schedule a SWTOR Raid"):
             created_by=interaction.user.id,
         )
 
-        embed = discord.Embed(
-            title="✅ Raid Scheduled",
-            color=discord.Color.green()
+        # Create the live raid session
+        session = RaidManager.create_session(
+            raid_id=raid_id,
+            operation=self.operation.value,
+            difficulty=self.difficulty.value,
+            raid_date=self.raid_date.value,
+            raid_time=self.raid_time.value,
+            raid_leader=interaction.user.display_name,
         )
 
-        embed.add_field(
-            name="Operation",
-            value=self.operation.value,
-            inline=True
-        )
-
-        embed.add_field(
-            name="Difficulty",
-            value=self.difficulty.value,
-            inline=True
-        )
-
-        embed.add_field(
-            name="Date",
-            value=self.raid_date.value,
-            inline=True
-        )
-
-        embed.add_field(
-            name="Time",
-            value=self.raid_time.value,
-            inline=True
-        )
-
-        embed.set_footer(text=f"Raid ID: {raid_id}")
-
+        # Tell the officer the raid was created
         await interaction.response.send_message(
-            embed=embed,
-            ephemeral=True
+            f"✅ Raid #{raid_id} created! Posting signup...",
+            ephemeral=True,
         )
+
+        # Post the live signup board
+        message = await interaction.channel.send(
+            embed=build_raid_embed(session),
+            view=RaidView(session.raid_id),
+        )
+
+        # Save the Discord message information for future updates
+        session.message_id = message.id
+        session.channel_id = interaction.channel.id

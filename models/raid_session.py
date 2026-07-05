@@ -1,7 +1,29 @@
 class RaidSession:
-    def __init__(self, operation):
-        self.operation = operation
+    def __init__(
+        self,
+        operation,
+        difficulty="",
+        raid_date="",
+        raid_time="",
+        raid_leader="",
+        raid_id=None,
+    ):
+        self.raid_id = raid_id
 
+        self.operation = operation
+        self.difficulty = difficulty
+        self.raid_date = raid_date
+        self.raid_time = raid_time
+        self.raid_leader = raid_leader
+
+        # Raid Status
+        self.locked = False
+        self.completed = False
+
+        # Discord message ID (used later for live updates)
+        self.message_id = None
+
+        # Signup Lists
         self.tanks = []
         self.healers = []
         self.dps = []
