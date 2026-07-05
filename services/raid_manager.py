@@ -181,3 +181,21 @@ class RaidManager:
 
         if session:
             session.completed = True
+
+    # -------------------------
+    # Refresh Raid Board
+    # -------------------------
+
+    @classmethod
+    async def refresh_board(cls, session):
+
+        if session.message is None:
+            return
+
+        from utils.embed_builder import build_raid_embed
+        from views.raid_view import RaidView
+
+        await session.message.edit(
+            embed=build_raid_embed(session),
+            view=RaidView(session.raid_id),
+        )

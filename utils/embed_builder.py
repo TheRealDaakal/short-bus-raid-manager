@@ -6,33 +6,21 @@ DIVIDER = "━━━━━━━━━━━━━━━━━━━━"
 
 
 def format_role(players, limit):
-    """
-    Formats raid roles with numbered slots.
-    Displays combat style and discipline when available.
-    """
+    """Formats a raid role with numbered slots."""
 
     lines = []
 
     for i in range(limit):
-
         if i < len(players):
-
-            player = players[i]
-
-            line = f"{i + 1}. {player.display_name}"
-
-            if getattr(player, "combat_style", ""):
-                line += f"\n   {player.combat_style}"
-
-            if getattr(player, "discipline", ""):
-                line += f" • {player.discipline}"
-
-            lines.append(line)
-
+            lines.append(
+                f"{i + 1}. {players[i].summary()}"
+            )
         else:
-            lines.append(f"{i + 1}. — Empty —")
+            lines.append(
+                f"{i + 1}. — Empty —"
+            )
 
-    return "\n".join(lines)
+    return "\n\n".join(lines)
 
 
 def build_raid_embed(session):
@@ -108,23 +96,16 @@ def build_raid_embed(session):
         inline=False,
     )
 
+    # ---------------------------------
+    # Bench
+    # ---------------------------------
+
     if session.bench:
 
-        bench = []
-
-        for i, player in enumerate(session.bench):
-
-            line = f"{i + 1}. {player.display_name}"
-
-            if player.combat_style:
-                line += f"\n   {player.combat_style}"
-
-            if player.discipline:
-                line += f" • {player.discipline}"
-
-            bench.append(line)
-
-        bench = "\n".join(bench)
+        bench = "\n\n".join(
+            f"{i + 1}. {player.summary()}"
+            for i, player in enumerate(session.bench)
+        )
 
     else:
 
@@ -143,18 +124,21 @@ def build_raid_embed(session):
     missing = []
 
     if len(session.tanks) < 2:
+        needed = 2 - len(session.tanks)
         missing.append(
-            f"{EMOJIS['tank']} {2 - len(session.tanks)} Tank(s)"
+            f"{EMOJIS['tank']} {needed} Tank{'s' if needed != 1 else ''}"
         )
 
     if len(session.healers) < 2:
+        needed = 2 - len(session.healers)
         missing.append(
-            f"{EMOJIS['healer']} {2 - len(session.healers)} Healer(s)"
+            f"{EMOJIS['healer']} {needed} Healer{'s' if needed != 1 else ''}"
         )
 
     if len(session.dps) < 4:
+        needed = 4 - len(session.dps)
         missing.append(
-            f"{EMOJIS['dps']} {4 - len(session.dps)} DPS"
+            f"{EMOJIS['dps']} {needed} DPS"
         )
 
     if missing:

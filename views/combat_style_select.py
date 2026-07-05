@@ -1,6 +1,7 @@
 import discord
 
 from utils.swtor_data import COMBAT_STYLES
+from views.discipline_select import DisciplineView
 
 
 class CombatStyleSelect(discord.ui.Select):
@@ -29,8 +30,12 @@ class CombatStyleSelect(discord.ui.Select):
         combat_style = self.values[0]
 
         await interaction.response.send_message(
-            f"✅ Selected **{combat_style}**\n\n"
-            "Discipline selection is next.",
+            "Choose your Discipline",
+            view=DisciplineView(
+                raid_id=self.raid_id,
+                role=self.role,
+                combat_style=combat_style,
+            ),
             ephemeral=True,
         )
 
