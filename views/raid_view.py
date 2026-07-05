@@ -3,6 +3,7 @@ from discord.ui import View, Button
 
 from services.raid_manager import RaidManager
 from utils.embed_builder import build_raid_embed
+from views.combat_style_select import CombatStyleView
 
 
 class RaidView(View):
@@ -18,46 +19,37 @@ class RaidView(View):
     @discord.ui.button(label="🛡 Tank", style=discord.ButtonStyle.blurple)
     async def tank(self, interaction: discord.Interaction, button: Button):
 
-        if not RaidManager.join_tank(self.session, interaction.user):
-            await interaction.response.send_message(
-                "🛡 Tank role is already full!",
-                ephemeral=True,
-            )
-            return
-
-        await interaction.response.edit_message(
-            embed=build_raid_embed(self.session),
-            view=self,
+        await interaction.response.send_message(
+            "Choose your Combat Style",
+            view=CombatStyleView(
+                raid_id=self.raid_id,
+                role="Tank",
+            ),
+            ephemeral=True,
         )
 
     @discord.ui.button(label="⚕️ Healer", style=discord.ButtonStyle.green)
     async def healer(self, interaction: discord.Interaction, button: Button):
 
-        if not RaidManager.join_healer(self.session, interaction.user):
-            await interaction.response.send_message(
-                "⚕️ Healer role is already full!",
-                ephemeral=True,
-            )
-            return
-
-        await interaction.response.edit_message(
-            embed=build_raid_embed(self.session),
-            view=self,
+        await interaction.response.send_message(
+            "Choose your Combat Style",
+            view=CombatStyleView(
+                raid_id=self.raid_id,
+                role="Healer",
+            ),
+            ephemeral=True,
         )
 
-    @discord.ui.button(label="⚔ DPS", style=discord.ButtonStyle.red)
+    @discord.ui.button(label="⚔️ DPS", style=discord.ButtonStyle.red)
     async def dps(self, interaction: discord.Interaction, button: Button):
 
-        if not RaidManager.join_dps(self.session, interaction.user):
-            await interaction.response.send_message(
-                "⚔ DPS role is already full!",
-                ephemeral=True,
-            )
-            return
-
-        await interaction.response.edit_message(
-            embed=build_raid_embed(self.session),
-            view=self,
+        await interaction.response.send_message(
+            "Choose your Combat Style",
+            view=CombatStyleView(
+                raid_id=self.raid_id,
+                role="DPS",
+            ),
+            ephemeral=True,
         )
 
     @discord.ui.button(label="🪑 Bench", style=discord.ButtonStyle.secondary)

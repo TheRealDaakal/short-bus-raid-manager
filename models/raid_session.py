@@ -27,6 +27,7 @@ class RaidSession:
         self.completed = False
 
         # Discord Message Tracking
+        self.message = None
         self.message_id = None
         self.channel_id = None
 

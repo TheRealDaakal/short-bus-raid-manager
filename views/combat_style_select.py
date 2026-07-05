@@ -4,8 +4,9 @@ from utils.swtor_data import COMBAT_STYLES
 
 
 class CombatStyleSelect(discord.ui.Select):
-    def __init__(self, role: str):
+    def __init__(self, raid_id: int, role: str):
 
+        self.raid_id = raid_id
         self.role = role
 
         options = [
@@ -35,9 +36,12 @@ class CombatStyleSelect(discord.ui.Select):
 
 
 class CombatStyleView(discord.ui.View):
-    def __init__(self, role: str):
+    def __init__(self, raid_id: int, role: str):
         super().__init__(timeout=120)
 
         self.add_item(
-            CombatStyleSelect(role)
+            CombatStyleSelect(
+                raid_id=raid_id,
+                role=role,
+            )
         )

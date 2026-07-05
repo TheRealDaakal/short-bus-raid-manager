@@ -4,7 +4,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
-from models.raid_session import RaidSession
+from services.raid_manager import RaidManager
 from views.raid_view import RaidView
 from views.raid_schedule_modal import RaidScheduleModal
 from utils.embed_builder import build_raid_embed
@@ -30,12 +30,23 @@ class Raid(commands.Cog):
 
         operation = random.choice(OPERATIONS)
 
-        session = RaidSession(operation)
+        raid_id = random.randint(100000, 999999)
+
+        session = RaidManager.create_session(
+            raid_id=raid_id,
+            operation=operation,
+        )
 
         await interaction.response.send_message(
             embed=build_raid_embed(session),
-            view=RaidView(session)
+            view=RaidView(raid_id)
         )
+
+        message = await interaction.original_response()
+
+        session.message = message
+        session.message_id = message.id
+        session.channel_id = message.channel.id
 
     @raid.command(
         name="schedule",
