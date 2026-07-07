@@ -23,7 +23,7 @@ def build_wizard_embed(session):
         5: "Choose Date & Time",
         6: "Choose Announcement Channel",
         7: "Choose Ping Type",
-        8: "Review & Create Raid",
+        8: "Review Your Raid",
     }
 
     descriptions = {
@@ -34,12 +34,21 @@ def build_wizard_embed(session):
         5: "Set the raid date and start time.",
         6: "Choose which channel will receive raid announcements.",
         7: "Choose who should be notified.",
-        8: "Everything look good? Click **Create Raid**.",
+        8: (
+            "Review every setting below.\n\n"
+            "If everything looks correct, click **🚀 Create Raid**."
+        ),
     }
+
+    color = (
+        discord.Color.green()
+        if session.step == 8
+        else discord.Color.orange()
+    )
 
     embed = discord.Embed(
         title="🚌 Short Bus Jawa Raid Wizard",
-        color=discord.Color.orange(),
+        color=color,
     )
 
     embed.description = (
@@ -78,11 +87,10 @@ def build_wizard_embed(session):
         inline=False,
     )
 
-    channel = (
-        f"<#{session.announcement_channel_id}>"
-        if session.announcement_channel_id
-        else "—"
-    )
+    if session.announcement_channel_id:
+        channel = f"<#{session.announcement_channel_id}>"
+    else:
+        channel = "—"
 
     if session.ping_type == "everyone":
         ping = "@everyone"
