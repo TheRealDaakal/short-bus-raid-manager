@@ -4,7 +4,12 @@ After=network-online.target
 Wants=network-online.target
 
 [Service]
-Type=simple
+Type=notify
+NotifyAccess=main
+# If the bot doesn't send a watchdog ping (see utils/systemd_watchdog.py)
+# within this window, systemd treats it as hung and force-restarts it -
+# not just crash detection, but actual hang detection.
+WatchdogSec=60
 User=jawa
 WorkingDirectory=/home/jawa/short-bus-jawa
 ExecStart=/home/jawa/short-bus-jawa/venv/bin/python bot.py

@@ -4,11 +4,17 @@ import sys
 
 import discord
 from discord import app_commands
-from discord.ext import commands
+from discord.ext import commands, tasks
 
 import config
 from utils.logging_config import setup_logging
 from services.database import initialize_database
+from utils.systemd_watchdog import notify_ready, notify_watchdog
+
+# How often to ping systemd's watchdog. Must be comfortably shorter than
+# WatchdogSec in the systemd service file (currently 60s) so a couple of
+# missed ticks don't cause a false-positive restart.
+WATCHDOG_PING_SECONDS = 20
 
 setup_logging(level=getattr(logging, config.LOG_LEVEL, logging.INFO))
 log = logging.getLogger(__name__)
@@ -64,7 +70,20 @@ class RaidBot(commands.Bot):
         self.add_view(TicketPanelView())
         self.add_view(TicketCloseView())
 
+        self.watchdog_ping.start()
+
         await self._sync_commands()
+
+    @tasks.loop(seconds=WATCHDOG_PING_SECONDS)
+    async def watchdog_ping(self):
+        # No-op unless running under systemd with Type=notify - see
+        # utils/systemd_watchdog.py. Proves the event loop is still
+        # actually ticking, not just that the process hasn't crashed.
+        notify_watchdog()
+
+    @watchdog_ping.before_loop
+    async def before_watchdog_ping(self):
+        await self.wait_until_ready()
 
     async def _sync_commands(self):
         if config.DEV_GUILD_ID:
@@ -83,6 +102,7 @@ class RaidBot(commands.Bot):
     async def on_ready(self):
         log.info("Logged in as %s (id=%s)", self.user, self.user.id)
         log.info("Connected to %d guild(s)", len(self.guilds))
+        notify_ready()
 
     async def on_disconnect(self):
         log.warning("Bot disconnected from Discord")

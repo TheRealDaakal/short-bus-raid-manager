@@ -67,6 +67,15 @@ sudo systemctl status short-bus-jawa
 journalctl -u short-bus-jawa -f
 ```
 
+## Auto-restart behavior
+
+`Restart=on-failure` restarts the bot if it crashes or exits. On top of that,
+the service also uses a **systemd watchdog** (`WatchdogSec=60`): the bot pings
+systemd every 20 seconds while its event loop is healthy, and if those pings
+stop arriving (a genuine hang, not just a crash), systemd force-kills and
+restarts it too. No action needed - this is already wired up in `bot.py` and
+the service file, and does nothing on non-systemd systems (like local dev).
+
 `journalctl -u short-bus-jawa -f` tails live logs - watch for "Logged in as
 Short Bus Raid Manager" to confirm it connected.
 
