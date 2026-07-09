@@ -43,7 +43,23 @@ nano .env
 
 Fill in `DISCORD_TOKEN`. Leave `DEV_GUILD_ID` blank (that's dev-only).
 
-## 5. Run it as a service (so it survives reboots/crashes)
+## 5. Bring over your existing database
+
+If you've already been running the bot locally (officer roles, welcome message,
+automod config, tickets, raid templates, etc. are all already set), copy that
+database up rather than starting fresh - otherwise the VPS starts completely
+blank and you'd have to redo every `/settings` command.
+
+From your **local machine** (not the server), with the local bot stopped first
+so the file isn't being written to mid-copy:
+
+```powershell
+scp "C:\Users\davew\Documents\WhirlwindFX\SWTOR-Raid-Manager\database\short_bus_jawa.db" jawa@YOUR_SERVER_IP:~/short-bus-jawa/database/
+```
+
+(Run this from PowerShell. Replace `YOUR_SERVER_IP` with the droplet's IP address.)
+
+## 6. Run it as a service (so it survives reboots/crashes)
 
 ```bash
 sudo cp deploy/short-bus-jawa.service /etc/systemd/system/
@@ -60,7 +76,7 @@ sudo systemctl enable short-bus-jawa
 sudo systemctl start short-bus-jawa
 ```
 
-## 6. Check it's running
+## 7. Check it's running
 
 ```bash
 sudo systemctl status short-bus-jawa
@@ -91,9 +107,24 @@ sudo systemctl restart short-bus-jawa
 
 ## Notes
 
+- **Stop the local copy before starting the VPS one.** The same bot token can't
+  usefully run in two places at once - both processes will try to respond to every
+  command, sync commands against each other, and generally fight. Once the VPS is
+  confirmed running, don't start `bot.py` locally again unless the VPS one is stopped.
 - The SQLite database (`database/short_bus_jawa.db`) lives on the server's disk under
   the repo folder. Back it up periodically (`scp` it down, or `cron` a copy) - if the
   server is ever destroyed without a backup, raid history, settings, tickets, and
   templates go with it.
 - Enable **Server Members Intent** and **Message Content Intent** for this bot in the
   Discord Developer Portal (Bot page) before starting it, or login will fail outright.
+  (Already enabled currently, since the local bot has been running fine with both -
+  this only matters if you ever recreate the bot application from scratch.)
+
+## Optional hardening (not required, but worth doing eventually)
+
+- `sudo ufw allow OpenSSH && sudo ufw enable` - a basic firewall that only allows
+  SSH in. This bot doesn't need to accept any other inbound connections.
+- Once you've confirmed the SSH key works, consider disabling password login
+  entirely (`PasswordAuthentication no` in `/etc/ssh/sshd_config`, then
+  `sudo systemctl restart sshd`) - closes off brute-force login attempts, which
+  every internet-facing server gets constantly.
