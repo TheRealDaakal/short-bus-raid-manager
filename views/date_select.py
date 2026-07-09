@@ -29,17 +29,21 @@ class MonthSelect(discord.ui.Select):
         await _advance_if_ready(interaction, view, session)
 
 
-class DaySelect(discord.ui.Select):
-    def __init__(self, session):
-        # Generous 1-31 range since the year (needed for exact days-in-
-        # month) isn't known until both pieces are picked - see
-        # _advance_if_ready, which clamps invalid combos like Feb 31.
+class _DaySelectBase(discord.ui.Select):
+    """
+    Discord caps a select at 25 options, and months can have up to 31
+    days, so Day is split across two selects (1-25, 26-31) rather than
+    one - the year (needed to know exact days-in-month) also isn't known
+    until both Month and Day are picked anyway, see _advance_if_ready.
+    """
+
+    def __init__(self, session, days: range, row: int):
         options = [
             discord.SelectOption(label=str(d), value=str(d), default=(session.wizard_day == d))
-            for d in range(1, 32)
+            for d in days
         ]
 
-        super().__init__(placeholder="Day...", options=options, row=1)
+        super().__init__(placeholder=f"Day ({days[0]}-{days[-1]})...", options=options, row=row)
 
     async def callback(self, interaction: discord.Interaction):
         view = self.view
@@ -48,6 +52,16 @@ class DaySelect(discord.ui.Select):
         session.wizard_day = int(self.values[0])
 
         await _advance_if_ready(interaction, view, session)
+
+
+class DaySelectLow(_DaySelectBase):
+    def __init__(self, session):
+        super().__init__(session, range(1, 26), row=1)
+
+
+class DaySelectHigh(_DaySelectBase):
+    def __init__(self, session):
+        super().__init__(session, range(26, 32), row=2)
 
 
 async def _advance_if_ready(interaction: discord.Interaction, view, session):

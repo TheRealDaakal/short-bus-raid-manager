@@ -90,9 +90,10 @@ class WizardView(discord.ui.View):
         self.add_item(RaidSizeButton(16))
 
     def build_date(self):
-        from views.date_select import MonthSelect, DaySelect
+        from views.date_select import MonthSelect, DaySelectLow, DaySelectHigh
         self.add_item(MonthSelect(self.session))
-        self.add_item(DaySelect(self.session))
+        self.add_item(DaySelectLow(self.session))
+        self.add_item(DaySelectHigh(self.session))
 
     def build_time(self):
         from views.time_select import HourSelect, MinuteSelect
