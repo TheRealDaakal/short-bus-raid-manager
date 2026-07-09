@@ -1,0 +1,15 @@
+[Unit]
+Description=Short Bus Jawa Discord Bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=jawa
+WorkingDirectory=/home/jawa/short-bus-jawa
+ExecStart=/home/jawa/short-bus-jawa/venv/bin/python bot.py
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -17,7 +17,26 @@ WHEEL_SIZE = 900
 CENTER = WHEEL_SIZE // 2
 OUTER_RADIUS = WHEEL_SIZE // 2 - 10
 
-FONT_PATH = r"C:\Windows\Fonts\arialbd.ttf"
+# Tried in order - covers Windows (dev) and common Linux server setups.
+# Falls back to PIL's built-in bitmap font if none of these exist, so
+# this never crashes regardless of host OS.
+_FONT_CANDIDATES = [
+    r"C:\Windows\Fonts\arialbd.ttf",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+    "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
+    "/usr/share/fonts/truetype/msttcorefonts/Arial_Bold.ttf",
+    "/System/Library/Fonts/Supplemental/Arial Bold.ttf",
+]
+
+
+def _load_bold_font(size: int) -> ImageFont.FreeTypeFont:
+    for path in _FONT_CANDIDATES:
+        try:
+            return ImageFont.truetype(path, size)
+        except OSError:
+            continue
+
+    return ImageFont.load_default()
 
 # Dark tinted fill per slice, cycled if there are more operations than colors.
 _SLICE_COLORS = [
@@ -58,10 +77,7 @@ def _build_thumbnail_layer(operation: str, thumb_w: int, thumb_h: int) -> Image.
     else:
         # No banner art yet for this operation - fall back to a plain
         # text label instead of leaving an empty box on the wheel.
-        try:
-            font = ImageFont.truetype(FONT_PATH, 16)
-        except OSError:
-            font = ImageFont.load_default()
+        font = _load_bold_font(16)
 
         words = operation.upper().split()
         lines, current = [], ""
