@@ -359,6 +359,21 @@ class Raid(commands.Cog):
         else:
             await interaction.response.send_message(f"No template #{template_id} found.", ephemeral=True)
 
+    @app_commands.command(name="roll", description="Roll a number between 1 and 100")
+    async def roll(self, interaction: discord.Interaction):
+        result = random.randint(1, 100)
+
+        if result == 100:
+            flourish = " 🎉 Nat 100!"
+        elif result == 1:
+            flourish = " 💀 Ouch."
+        else:
+            flourish = ""
+
+        await interaction.response.send_message(
+            f"🎲 {interaction.user.mention} rolled **{result}** (1-100){flourish}"
+        )
+
 
 async def setup(bot):
     await bot.add_cog(Raid(bot))
