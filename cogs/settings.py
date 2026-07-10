@@ -96,6 +96,44 @@ class Settings(commands.Cog):
         else:
             await interaction.response.send_message(f"{role.mention} wasn't configured as an officer role.", ephemeral=True)
 
+    @officerrole.command(name="list", description="List the officer role(s) and who currently has them")
+    async def officerrole_list(self, interaction: discord.Interaction):
+        if not PermissionService.can_manage_settings(interaction.user):
+            await interaction.response.send_message("You don't have permission to view settings.", ephemeral=True)
+            return
+
+        role_ids = guild_settings_service.get_officer_roles(interaction.guild_id)
+
+        if not role_ids:
+            await interaction.response.send_message(
+                "No officer role configured - falls back to Administrator or a role named "
+                "Officer/Raid Officer/Guild Master.",
+                ephemeral=True,
+            )
+            return
+
+        embed = discord.Embed(title="👑 Raid Officers", color=discord.Color.gold())
+
+        for role_id in role_ids:
+            role = interaction.guild.get_role(role_id)
+
+            if role is None:
+                embed.add_field(name=f"Unknown role ({role_id})", value="Role no longer exists", inline=False)
+                continue
+
+            members = role.members
+
+            if members:
+                value = "\n".join(m.mention for m in members[:25])
+                if len(members) > 25:
+                    value += f"\n...and {len(members) - 25} more"
+            else:
+                value = "No members currently have this role"
+
+            embed.add_field(name=f"{role.name} ({len(members)})", value=value, inline=False)
+
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+
     @settings.command(name="raidleaderrole", description="Set which role counts as a raid leader")
     @app_commands.describe(role="Members with this role can be highlighted as raid leaders")
     async def raidleaderrole(self, interaction: discord.Interaction, role: discord.Role):
