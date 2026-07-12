@@ -16,6 +16,10 @@ log = logging.getLogger(__name__)
 
 CHECK_INTERVAL_SECONDS = 60
 
+# How long the "cleanup crew has arrived" message sticks around before
+# deleting itself, so raid channels don't slowly fill up with old ones.
+CLEANUP_MESSAGE_LIFETIME_SECONDS = 60 * 60
+
 _PING_CONTENT = {
     "everyone": "@everyone",
     "here": "@here",
@@ -146,7 +150,12 @@ class Scheduler(commands.Cog):
                 log.exception("Failed to delete raid board for raid #%s", raid_id)
 
             try:
-                await channel.send(random.choice(CLEANUP_MESSAGES))
+                cleanup_message = await channel.send(random.choice(CLEANUP_MESSAGES))
+                # Fire-and-forget: discord.py schedules this deletion in the
+                # background and returns immediately, so it doesn't block
+                # the scheduler tick. Keeps the channel from slowly filling
+                # up with old "cleanup crew has arrived" messages.
+                await cleanup_message.delete(delay=CLEANUP_MESSAGE_LIFETIME_SECONDS)
             except discord.HTTPException:
                 pass
 
